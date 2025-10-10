@@ -51,6 +51,25 @@ namespace AdocaoApi
                 return Results.Created($"/animais/{animal.Id}", animal);
             });
 
+            app.MapPut("/animais/{id}", async (int id, Animal dadosAtualizados, AppDbContext db) =>
+            {
+                var animal = await db.Animais.FindAsync(id);
+                if (animal is null) return Results.NotFound();
+
+                var atualizado = animal with
+                {
+                    Nome = dadosAtualizados.Nome,
+                    Especie = dadosAtualizados.Especie,
+                    Idade = dadosAtualizados.Idade,
+                    Status = dadosAtualizados.Status
+                };
+
+                db.Entry(animal).CurrentValues.SetValues(atualizado);
+                await db.SaveChangesAsync();
+
+                return Results.Ok(atualizado);
+            });
+
             app.MapDelete("/animais/{id}", async (int id, AppDbContext db) =>
             {
                 var animal = await db.Animais.FindAsync(id);
@@ -73,6 +92,23 @@ namespace AdocaoApi
                 db.Adotantes.Add(adotante);
                 await db.SaveChangesAsync();
                 return Results.Created($"/adotantes/{adotante.Id}", adotante);
+            });
+
+            app.MapPut("/adotantes/{id}", async (int id, Adotante dadosAtualizados, AppDbContext db) =>
+            {
+                var adotante = await db.Adotantes.FindAsync(id);
+                if (adotante is null) return Results.NotFound();
+
+                var atualizado = adotante with
+                {
+                    Nome = dadosAtualizados.Nome,
+                    Email = dadosAtualizados.Email
+                };
+
+                db.Entry(adotante).CurrentValues.SetValues(atualizado);
+                await db.SaveChangesAsync();
+
+                return Results.Ok(atualizado);
             });
 
             app.MapDelete("/adotantes/{id}", async (int id, AppDbContext db) =>

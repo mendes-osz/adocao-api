@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("adocao-api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4e747c5d0a3909d24a8d8f88d00e48cc5ab6a5fd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e28040fa294f6fbd04505454333e035418bca008")]
 [assembly: System.Reflection.AssemblyProductAttribute("adocao-api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("adocao-api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
