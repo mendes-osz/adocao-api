@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace SeuProjeto.Data;
+namespace AdocaoApi.Data;
 
 public class AppDbContext : DbContext
 {
