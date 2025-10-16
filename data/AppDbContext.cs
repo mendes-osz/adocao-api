@@ -10,5 +10,5 @@ public class AppDbContext : DbContext
     public DbSet<Adotante> Adotantes => Set<Adotante>();
 }
 
-public record Animal(int Id, string Nome, string Especie, int Idade, string Status);
+public record Animal(int Id, string Nome, string Especie, int Idade, bool Status);
 public record Adotante(int Id, string Nome, string Email);

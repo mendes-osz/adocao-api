@@ -7,7 +7,7 @@ using MySqlConnector;
 
 namespace AdocaoApi
 {
-    public record Animal(int Id, string Nome, string Especie, int Idade, string Status);
+    public record Animal(int Id, string Nome, string Especie, int Idade, bool Status);
     public record Adotante(int Id, string Nome, string Email);
 
     public class AppDbContext : DbContext
