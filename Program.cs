@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using MySqlConnector;
 
 namespace AdocaoApi
 {
@@ -36,94 +37,189 @@ namespace AdocaoApi
             app.UseSwagger();
             app.UseSwaggerUI();
 
-            app.MapGet("/animais", async (AppDbContext db) => await db.Animais.ToListAsync());
+            app.MapGet("/animais", async (AppDbContext db) =>
+            {
+                try
+                {
+                    return Results.Ok(await db.Animais.ToListAsync());
+                }
+                catch (MySqlException)
+                {
+                    return Results.Problem("Erro de conexão com o banco de dados.");
+                }
+                catch (InvalidOperationException)
+                {
+                    return Results.Problem("Erro interno ao acessar os dados.");
+                }
+            });
 
             app.MapGet("/animais/{id}", async (int id, AppDbContext db) =>
             {
-                var animal = await db.Animais.FindAsync(id);
-                return animal is not null ? Results.Ok(animal) : Results.NotFound();
+                try
+                {
+                    var animal = await db.Animais.FindAsync(id);
+                    return animal is not null ? Results.Ok(animal) : Results.NotFound("Animal não encontrado.");
+                }
+                catch (DbUpdateException)
+                {
+                    return Results.Problem("Erro ao consultar o banco de dados.");
+                }
             });
 
             app.MapPost("/animais", async (Animal animal, AppDbContext db) =>
             {
-                db.Animais.Add(animal);
-                await db.SaveChangesAsync();
-                return Results.Created($"/animais/{animal.Id}", animal);
+                try
+                {
+                    db.Animais.Add(animal);
+                    await db.SaveChangesAsync();
+                    return Results.Created($"/animais/{animal.Id}", animal);
+                }
+                catch (DbUpdateException)
+                {
+                    return Results.Problem("Erro ao salvar o animal no banco de dados. Verifique os dados informados.");
+                }
+                catch (MySqlException)
+                {
+                    return Results.Problem("Falha na conexão com o banco de dados.");
+                }
             });
 
             app.MapPut("/animais/{id}", async (int id, Animal dadosAtualizados, AppDbContext db) =>
             {
-                var animal = await db.Animais.FindAsync(id);
-                if (animal is null) return Results.NotFound();
-
-                var atualizado = animal with
+                try
                 {
-                    Nome = dadosAtualizados.Nome,
-                    Especie = dadosAtualizados.Especie,
-                    Idade = dadosAtualizados.Idade,
-                    Status = dadosAtualizados.Status
-                };
+                    var animal = await db.Animais.FindAsync(id);
+                    if (animal is null) return Results.NotFound("Animal não encontrado.");
 
-                db.Entry(animal).CurrentValues.SetValues(atualizado);
-                await db.SaveChangesAsync();
+                    var atualizado = animal with
+                    {
+                        Nome = dadosAtualizados.Nome,
+                        Especie = dadosAtualizados.Especie,
+                        Idade = dadosAtualizados.Idade,
+                        Status = dadosAtualizados.Status
+                    };
 
-                return Results.Ok(atualizado);
+                    db.Entry(animal).CurrentValues.SetValues(atualizado);
+                    await db.SaveChangesAsync();
+                    return Results.Ok(atualizado);
+                }
+                catch (DbUpdateException)
+                {
+                    return Results.Problem("Erro ao atualizar os dados no banco.");
+                }
             });
 
             app.MapDelete("/animais/{id}", async (int id, AppDbContext db) =>
             {
-                var animal = await db.Animais.FindAsync(id);
-                if (animal is null) return Results.NotFound();
-                db.Animais.Remove(animal);
-                await db.SaveChangesAsync();
-                return Results.Ok(animal);
+                try
+                {
+                    var animal = await db.Animais.FindAsync(id);
+                    if (animal is null) return Results.NotFound("Animal não encontrado.");
+
+                    db.Animais.Remove(animal);
+                    await db.SaveChangesAsync();
+                    return Results.Ok(animal);
+                }
+                catch (DbUpdateException)
+                {
+                    return Results.Problem("Erro ao remover o registro do banco de dados.");
+                }
             });
 
-            app.MapGet("/adotantes", async (AppDbContext db) => await db.Adotantes.ToListAsync());
+            app.MapGet("/adotantes", async (AppDbContext db) =>
+            {
+                try
+                {
+                    return Results.Ok(await db.Adotantes.ToListAsync());
+                }
+                catch (MySqlException)
+                {
+                    return Results.Problem("Erro de conexão com o banco de dados.");
+                }
+            });
 
             app.MapGet("/adotantes/{id}", async (int id, AppDbContext db) =>
             {
-                var adotante = await db.Adotantes.FindAsync(id);
-                return adotante is not null ? Results.Ok(adotante) : Results.NotFound();
+                try
+                {
+                    var adotante = await db.Adotantes.FindAsync(id);
+                    return adotante is not null ? Results.Ok(adotante) : Results.NotFound("Adotante não encontrado.");
+                }
+                catch (DbUpdateException)
+                {
+                    return Results.Problem("Erro ao consultar o banco de dados.");
+                }
             });
 
             app.MapPost("/adotantes", async (Adotante adotante, AppDbContext db) =>
             {
-                db.Adotantes.Add(adotante);
-                await db.SaveChangesAsync();
-                return Results.Created($"/adotantes/{adotante.Id}", adotante);
+                try
+                {
+                    db.Adotantes.Add(adotante);
+                    await db.SaveChangesAsync();
+                    return Results.Created($"/adotantes/{adotante.Id}", adotante);
+                }
+                catch (DbUpdateException)
+                {
+                    return Results.Problem("Erro ao salvar o adotante no banco de dados.");
+                }
             });
 
             app.MapPut("/adotantes/{id}", async (int id, Adotante dadosAtualizados, AppDbContext db) =>
             {
-                var adotante = await db.Adotantes.FindAsync(id);
-                if (adotante is null) return Results.NotFound();
-
-                var atualizado = adotante with
+                try
                 {
-                    Nome = dadosAtualizados.Nome,
-                    Email = dadosAtualizados.Email
-                };
+                    var adotante = await db.Adotantes.FindAsync(id);
+                    if (adotante is null) return Results.NotFound("Adotante não encontrado.");
 
-                db.Entry(adotante).CurrentValues.SetValues(atualizado);
-                await db.SaveChangesAsync();
+                    var atualizado = adotante with
+                    {
+                        Nome = dadosAtualizados.Nome,
+                        Email = dadosAtualizados.Email
+                    };
 
-                return Results.Ok(atualizado);
+                    db.Entry(adotante).CurrentValues.SetValues(atualizado);
+                    await db.SaveChangesAsync();
+                    return Results.Ok(atualizado);
+                }
+                catch (DbUpdateException)
+                {
+                    return Results.Problem("Erro ao atualizar o registro no banco de dados.");
+                }
             });
 
             app.MapDelete("/adotantes/{id}", async (int id, AppDbContext db) =>
             {
-                var adotante = await db.Adotantes.FindAsync(id);
-                if (adotante is null) return Results.NotFound();
-                db.Adotantes.Remove(adotante);
-                await db.SaveChangesAsync();
-                return Results.Ok(adotante);
+                try
+                {
+                    var adotante = await db.Adotantes.FindAsync(id);
+                    if (adotante is null) return Results.NotFound("Adotante não encontrado.");
+
+                    db.Adotantes.Remove(adotante);
+                    await db.SaveChangesAsync();
+                    return Results.Ok(adotante);
+                }
+                catch (DbUpdateException)
+                {
+                    return Results.Problem("Erro ao excluir o adotante do banco de dados.");
+                }
             });
 
             using (var scope = app.Services.CreateScope())
             {
-                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                db.Database.EnsureCreated();
+                try
+                {
+                    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                    db.Database.EnsureCreated();
+                }
+                catch (MySqlException)
+                {
+                    Console.WriteLine("Erro ao conectar ao banco. Verifique as credenciais.");
+                }
+                catch (InvalidOperationException)
+                {
+                    Console.WriteLine("Erro interno ao criar o banco de dados.");
+                }
             }
 
             app.Run();
