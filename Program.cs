@@ -3,12 +3,10 @@ using AdocaoApi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Conexão com o MySQL
 var connectionString = "server=localhost;database=dbadocao;user=root;password=0987";
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
-// Habilitar CORS (para o React poder acessar)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
@@ -18,13 +16,27 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod());
 });
 
-builder.Services.AddControllers();
 var app = builder.Build();
 
 app.UseCors("AllowReactApp");
-app.MapControllers();
 
-// Criar banco automaticamente, se não existir
+// === Endpoints ===
+app.MapGet("/Animais", async (AppDbContext db) => await db.Animais.ToListAsync());
+app.MapPost("/Animais", async (Animal animal, AppDbContext db) =>
+{
+    db.Animais.Add(animal);
+    await db.SaveChangesAsync();
+    return Results.Created($"/Animais/{animal.Id}", animal);
+});
+
+app.MapGet("/Adotantes", async (AppDbContext db) => await db.Adotantes.ToListAsync());
+app.MapPost("/Adotantes", async (Adotante adotante, AppDbContext db) =>
+{
+    db.Adotantes.Add(adotante);
+    await db.SaveChangesAsync();
+    return Results.Created($"/Adotantes/{adotante.Id}", adotante);
+});
+
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();

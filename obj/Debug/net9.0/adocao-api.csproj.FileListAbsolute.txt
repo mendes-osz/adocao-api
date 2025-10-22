@@ -267,3 +267,6 @@
 /home/thiago/adocao-api/obj/Debug/net9.0/adocao-api.csproj.Up2Date
 /home/thiago/adocao-api/obj/Debug/net9.0/adocao-api.genruntimeconfig.cache
 /home/thiago/adocao-api/obj/Debug/net9.0/ref/adocao-api.dll
+/home/jhonatan/Desktop/adocao-api/bin/Debug/net9.0/adocao-front/package-lock.json
+/home/jhonatan/Desktop/adocao-api/bin/Debug/net9.0/adocao-front/package.json
+/home/jhonatan/Desktop/adocao-api/bin/Debug/net9.0/adocao-front/public/manifest.json

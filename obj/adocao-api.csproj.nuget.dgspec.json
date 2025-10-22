@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/home/thiago/adocao-api/adocao-api.csproj": {}
+    "/home/jhonatan/Desktop/adocao-api/adocao-api.csproj": {}
   },
   "projects": {
-    "/home/thiago/adocao-api/adocao-api.csproj": {
+    "/home/jhonatan/Desktop/adocao-api/adocao-api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/thiago/adocao-api/adocao-api.csproj",
+        "projectUniqueName": "/home/jhonatan/Desktop/adocao-api/adocao-api.csproj",
         "projectName": "adocao-api",
-        "projectPath": "/home/thiago/adocao-api/adocao-api.csproj",
-        "packagesPath": "/home/thiago/.nuget/packages/",
-        "outputPath": "/home/thiago/adocao-api/obj/",
+        "projectPath": "/home/jhonatan/Desktop/adocao-api/adocao-api.csproj",
+        "packagesPath": "/home/jhonatan/.nuget/packages/",
+        "outputPath": "/home/jhonatan/Desktop/adocao-api/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/thiago/.nuget/NuGet/NuGet.Config"
+          "/home/jhonatan/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -38,7 +38,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net9.0": {
@@ -74,6 +74,12 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[9.0.9, 9.0.9]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -82,7 +88,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.203/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.110/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

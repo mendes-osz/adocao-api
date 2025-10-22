@@ -10,7 +10,7 @@ function App() {
   const [buscaId, setBuscaId] = useState("");
   const [resultadoBusca, setResultadoBusca] = useState(null);
 
-  const apiUrl = "http://localhost:5279/api";
+  const apiUrl = "http://localhost:5279";
 
   useEffect(() => {
     fetchAnimais();
@@ -127,4 +127,3 @@ function App() {
 }
 
 export default App;
-
