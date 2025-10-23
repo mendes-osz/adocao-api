@@ -20,8 +20,15 @@ var app = builder.Build();
 
 app.UseCors("AllowReactApp");
 
-// === Endpoints ===
+
 app.MapGet("/Animais", async (AppDbContext db) => await db.Animais.ToListAsync());
+
+app.MapGet("/Animais/{id}", async (int id, AppDbContext db) =>
+{
+    var animal = await db.Animais.FindAsync(id);
+    return animal is not null ? Results.Ok(animal) : Results.NotFound();
+});
+
 app.MapPost("/Animais", async (Animal animal, AppDbContext db) =>
 {
     db.Animais.Add(animal);
@@ -30,6 +37,7 @@ app.MapPost("/Animais", async (Animal animal, AppDbContext db) =>
 });
 
 app.MapGet("/Adotantes", async (AppDbContext db) => await db.Adotantes.ToListAsync());
+
 app.MapPost("/Adotantes", async (Adotante adotante, AppDbContext db) =>
 {
     db.Adotantes.Add(adotante);
