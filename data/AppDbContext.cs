@@ -10,5 +10,18 @@ public class AppDbContext : DbContext
     public DbSet<Adotante> Adotantes => Set<Adotante>();
 }
 
-public record Animal(int Id, string Nome, string Especie, int Idade, string Status);
-public record Adotante(int Id, string Nome, string Email);
+public class Animal
+{
+    public int Id { get; set; }
+    public string Nome { get; set; } = string.Empty;
+    public string Especie { get; set; } = string.Empty;
+    public int Idade { get; set; }
+    public string Status { get; set; } = string.Empty;
+}
+
+public class Adotante
+{
+    public int Id { get; set; }
+    public string Nome { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+}
